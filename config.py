@@ -52,7 +52,8 @@ N_PROCESSES = cpu_count()
 
 # Topologies used for the simulation.
 # Topology implementations are located in ./icarus/scenarios/topology.py
-TOPOLOGIES = ['GEANT', 'WIDE', 'GARR', 'TISCALI']
+# TOPOLOGIES = ['GEANT', 'WIDE', 'GARR', 'TISCALI']
+TOPOLOGIES = ['GEANT']
 
 # Format in which results are saved.
 # Result readers and writers are located in module ./icarus/results/readwrite.py
