@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+# vim: set et sw=4 ts=4 sts=4 ff=unix fenc=utf8:
+# Author: Jeswang<wangyi724@gmail.com>
+#         http://blog.jeswang.org
+# Created on 2014-08-12 10:29:52
+
 """Plot results read from a result set
 """
 from __future__ import division
@@ -100,13 +106,13 @@ def plot_cache_hits_vs_alpha(resultset, topology, cache_size, alpha_range, strat
     desc = {}
     desc['title'] = 'Cache hit ratio: T=%s C=%s' % (topology, cache_size)
     desc['ylabel'] = 'Cache hit ratio'
-    desc['xlabel'] = u'Content distribution \u03b1'
-    desc['xparam'] = ('workload', 'alpha')
+    desc['xlabel'] = u'Content distribution α'
+    desc['xparam'] = ['alpha']
     desc['xvals'] = alpha_range
-    desc['filter'] = {'topology': {'name': topology},
-                      'cache_placement': {'network_cache': cache_size}}
+    desc['filter'] = {'topology_name': topology,
+                      'network_cache': cache_size}
     desc['ymetrics'] = [('CACHE_HIT_RATIO', 'MEAN')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'upper left'
@@ -125,12 +131,12 @@ def plot_cache_hits_vs_cache_size(resultset, topology, alpha, cache_size_range, 
     desc['xlabel'] = u'Cache to population ratio'
     desc['ylabel'] = 'Cache hit ratio'
     desc['xscale'] = 'log'
-    desc['xparam'] = ('cache_placement','network_cache')
+    desc['xparam'] = ['network_cache']
     desc['xvals'] = cache_size_range
-    desc['filter'] = {'topology': {'name': topology},
-                      'workload': {'name': 'STATIONARY', 'alpha': alpha}}
+    desc['filter'] = {'topology_name': topology,
+                      'alpha': alpha}
     desc['ymetrics'] = [('CACHE_HIT_RATIO', 'MEAN')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'upper left'
@@ -144,14 +150,14 @@ def plot_cache_hits_vs_cache_size(resultset, topology, alpha, cache_size_range, 
 def plot_link_load_vs_alpha(resultset, topology, cache_size, alpha_range, strategies, plotdir):
     desc = {}
     desc['title'] = 'Internal link load: T=%s C=%s' % (topology, cache_size)
-    desc['xlabel'] = u'Content distribution \u03b1'
+    desc['xlabel'] = u'Content distribution α'
     desc['ylabel'] = 'Internal link load'
-    desc['xparam'] = ('workload', 'alpha')
+    desc['xparam'] = ['alpha']
     desc['xvals'] = alpha_range
-    desc['filter'] = {'topology': {'name': topology},
-                      'cache_placement': {'network_cache': cache_size}}
+    desc['filter'] = {'topology_name': topology,
+                      'network_cache': cache_size}
     desc['ymetrics'] = [('LINK_LOAD', 'MEAN_INTERNAL')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'upper right'
@@ -168,12 +174,12 @@ def plot_link_load_vs_cache_size(resultset, topology, alpha, cache_size_range, s
     desc['xlabel'] = 'Cache to population ratio'
     desc['ylabel'] = 'Internal link load'
     desc['xscale'] = 'log'
-    desc['xparam'] = ('cache_placement','network_cache')
+    desc['xparam'] = ['network_cache']
     desc['xvals'] = cache_size_range
-    desc['filter'] = {'topology': {'name': topology},
-                      'workload': {'name': 'stationary', 'alpha': alpha}}
+    desc['filter'] = {'topology_name': topology,
+                      'alpha': alpha}
     desc['ymetrics'] = [('LINK_LOAD', 'MEAN_INTERNAL')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'upper right'
@@ -187,14 +193,14 @@ def plot_link_load_vs_cache_size(resultset, topology, alpha, cache_size_range, s
 def plot_latency_vs_alpha(resultset, topology, cache_size, alpha_range, strategies, plotdir):
     desc = {}
     desc['title'] = 'Latency: T=%s C=%s' % (topology, cache_size)
-    desc['xlabel'] = u'Content distribution \u03b1'
+    desc['xlabel'] = u'Content distribution α'
     desc['ylabel'] = 'Latency (ms)'
-    desc['xparam'] = ('workload', 'alpha')
+    desc['xparam'] = ['alpha']
     desc['xvals'] = alpha_range
-    desc['filter'] = {'topology': {'name': topology},
-                      'cache_placement': {'network_cache': cache_size}}
+    desc['filter'] = {'topology_name': topology,
+                      'network_cache': cache_size}
     desc['ymetrics'] = [('LATENCY', 'MEAN')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'upper right'
@@ -211,12 +217,12 @@ def plot_latency_vs_cache_size(resultset, topology, alpha, cache_size_range, str
     desc['xlabel'] = 'Cache to population ratio'
     desc['ylabel'] = 'Latency'
     desc['xscale'] = 'log'
-    desc['xparam'] = ('cache_placement','network_cache')
+    desc['xparam'] = ['network_cache']
     desc['xvals'] = cache_size_range
-    desc['filter'] = {'topology': {'name': topology},
-                      'workload': {'name': 'STATIONARY', 'alpha': alpha}}
+    desc['filter'] = {'topology_name': topology,
+                      'alpha': alpha}
     desc['ymetrics'] = [('LATENCY', 'MEAN')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['metric'] = ('LATENCY', 'MEAN')
     desc['errorbar'] = True
@@ -241,12 +247,12 @@ def plot_cache_hits_vs_topology(resultset, alpha, cache_size, topology_range, st
     desc = {}
     desc['title'] = 'Cache hit ratio: A=%s C=%s' % (alpha, cache_size)
     desc['ylabel'] = 'Cache hit ratio'
-    desc['xparam'] = ('topology', 'name')
+    desc['xparam'] = ['topology_name']
     desc['xvals'] = topology_range
-    desc['filter'] = {'cache_placement': {'network_cache': cache_size},
-                      'workload': {'name': 'STATIONARY', 'alpha': alpha}}
+    desc['filter'] = {'network_cache': cache_size,
+                      'alpha': alpha}
     desc['ymetrics'] = [('CACHE_HIT_RATIO', 'MEAN')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'lower right'
@@ -269,12 +275,12 @@ def plot_link_load_vs_topology(resultset, alpha, cache_size, topology_range, str
     desc = {}
     desc['title'] = 'Internal link load: A=%s C=%s' % (alpha, cache_size)
     desc['ylabel'] = 'Internal link load'
-    desc['xparam'] = ('topology', 'name')
+    desc['xparam'] = ['topology_name']
     desc['xvals'] = topology_range
-    desc['filter'] = {'cache_placement': {'network_cache': cache_size},
-                      'workload': {'name': 'STATIONARY', 'alpha': alpha}}
+    desc['filter'] = {'network_cache': cache_size,
+                      'alpha': alpha}
     desc['ymetrics'] = [('LINK_LOAD', 'MEAN_INTERNAL')]*len(strategies)
-    desc['ycondnames'] = [('strategy', 'name')]*len(strategies)
+    desc['ycondnames'] = [['strategy_name']]*len(strategies)
     desc['ycondvals'] = strategies
     desc['errorbar'] = True
     desc['legend_loc'] = 'lower right'
