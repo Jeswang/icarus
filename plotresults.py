@@ -31,10 +31,14 @@ plt.rcParams['pdf.use14corefonts'] = True
 
 # If True text is interpreted as LaTeX, e.g. underscore are interpreted as 
 # subscript. If False, text is interpreted literally
-plt.rcParams['text.usetex'] = False
+plt.rcParams['text.usetex'] = True
+plt.rcParams['text.latex.unicode']=True
 
 # Aspect ratio of the output figures
 plt.rcParams['figure.figsize'] = 8, 5
+
+plt.rcParams['font.family'] = "sans-serif"
+plt.rcParams['font.sans-serif'] = "DejaVu Sans"
 
 # Size of font in legends
 LEGEND_SIZE = 14
@@ -106,7 +110,7 @@ def plot_cache_hits_vs_alpha(resultset, topology, cache_size, alpha_range, strat
     desc = {}
     desc['title'] = 'Cache hit ratio: T=%s C=%s' % (topology, cache_size)
     desc['ylabel'] = 'Cache hit ratio'
-    desc['xlabel'] = u'Content distribution α'
+    desc['xlabel'] = r'Content distribution \alpha'
     desc['xparam'] = ['alpha']
     desc['xvals'] = alpha_range
     desc['filter'] = {'topology_name': topology,
@@ -150,7 +154,7 @@ def plot_cache_hits_vs_cache_size(resultset, topology, alpha, cache_size_range, 
 def plot_link_load_vs_alpha(resultset, topology, cache_size, alpha_range, strategies, plotdir):
     desc = {}
     desc['title'] = 'Internal link load: T=%s C=%s' % (topology, cache_size)
-    desc['xlabel'] = u'Content distribution α'
+    desc['xlabel'] = r'Content distribution \alpha'
     desc['ylabel'] = 'Internal link load'
     desc['xparam'] = ['alpha']
     desc['xvals'] = alpha_range
@@ -193,7 +197,7 @@ def plot_link_load_vs_cache_size(resultset, topology, alpha, cache_size_range, s
 def plot_latency_vs_alpha(resultset, topology, cache_size, alpha_range, strategies, plotdir):
     desc = {}
     desc['title'] = 'Latency: T=%s C=%s' % (topology, cache_size)
-    desc['xlabel'] = u'Content distribution α'
+    desc['xlabel'] = r'Content distribution \alpha'
     desc['ylabel'] = 'Latency (ms)'
     desc['xparam'] = ['alpha']
     desc['xvals'] = alpha_range

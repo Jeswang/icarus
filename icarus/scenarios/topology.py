@@ -119,7 +119,7 @@ def topology_path(network_cache=0.05, n_contents=100000, n=3, seed=None):
     fnss.set_weights_constant(topology, 1.0)
     fnss.set_delays_constant(topology, INTERNAL_LINK_DELAY, 'ms')
     # label links as internal or external
-    for u, v in topology.edges_iter():
+    for u, v in topology.edges_iter():  
         if u in sources or v in sources:
             topology.edge[u][v]['type'] = 'external'
             fnss.set_delays_constant(topology, EXTERNAL_LINK_DELAY, 'ms', [(u, v)])
@@ -390,3 +390,59 @@ def topology_garr(network_cache=0.05, n_contents=100000, seed=None):
         fnss.add_stack(topology, node, 'cache', {'size': size})
     return topology
 
+@register_topology_factory('GEANT_CUSTOM')
+def topology_geant(network_cache=0.05, n_contents=100000, seed=None):
+    """
+    Return a scenario based on GEANT topology
+    
+    Parameters
+    ----------
+    network_cache : float
+        Size of network cache (sum of all caches) normalized by size of content
+        population
+    n_contents : int
+        Size of content population
+    seed : int, optional
+        The seed used for random number generation
+        
+    Returns
+    -------
+    topology : fnss.Topology
+        The topology object
+    """
+    topology = fnss.parse_topology_zoo(path.join(TOPOLOGY_RESOURCES_DIR,
+                                                 'Geant2012.graphml')
+                                       ).to_undirected()
+    topology = list(nx.connected_component_subgraphs(topology))[0]
+    deg = nx.degree(topology)
+
+    caches = [v for v in topology.nodes()] # 38 nodes
+    # attach sources to topology
+    source_attachments = [v for v in topology.nodes() if deg[v] == 2] # 13 nodes
+    sources = []
+    for v in source_attachments:
+        u = v + 1000 # node ID of source
+        topology.add_edge(v, u)
+        sources.append(u)
+    # randomly allocate contents to sources
+    content_placement = uniform_content_placement(topology, range(1, n_contents+1), sources, seed=seed)
+    # add stacks to nodes
+    for v in sources:
+        fnss.add_stack(topology, v, 'source', {'contents': content_placement[v]})
+    # set weights and delays on all links
+    fnss.set_weights_constant(topology, 1.0)
+    fnss.set_delays_constant(topology, INTERNAL_LINK_DELAY, 'ms')
+    # label links as internal or external
+    for u, v in topology.edges_iter():
+        if u in sources or v in sources:
+            topology.edge[u][v]['type'] = 'external'
+            # this prevents sources to be used to route traffic
+            fnss.set_weights_constant(topology, 1000.0, [(u, v)])
+            fnss.set_delays_constant(topology, EXTERNAL_LINK_DELAY, 'ms', [(u, v)])
+        else:
+            topology.edge[u][v]['type'] = 'internal'
+    # place caches 
+    cache_placement = uniform_cache_placement(topology, network_cache*n_contents, caches)
+    for node, size in cache_placement.iteritems():
+        fnss.add_stack(topology, node, 'cache', {'size': size})
+    return topology
