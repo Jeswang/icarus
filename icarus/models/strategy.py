@@ -795,7 +795,7 @@ class ContentAware(Strategy):
         authoritative_cache : any hashable type
             The node on which the authoritative cache is deployed
         """
-        if content < 300000 * 0.6:
+        if content <= 300000 * 0.6:
             return self.cache_assignment[self.hash(content, self.view.caches())]
         else:
             set = int((content - 300000*0.6)/(300000*0.1))
