@@ -14,6 +14,7 @@ __all__ = [
         'topology_binary_tree',
         'topology_path',
         'topology_geant',
+        'topology_geant_custom',
         'topology_tiscali',
         'topology_wide',
         'topology_garr',
@@ -391,7 +392,7 @@ def topology_garr(network_cache=0.05, n_contents=100000, seed=None):
     return topology
 
 @register_topology_factory('GEANT_CUSTOM')
-def topology_geant(network_cache=0.05, n_contents=100000, seed=None):
+def topology_geant_custom(network_cache=0.05, n_contents=100000, seed=None):
     """
     Return a scenario based on GEANT topology
     
@@ -411,17 +412,23 @@ def topology_geant(network_cache=0.05, n_contents=100000, seed=None):
         The topology object
     """
     topology = fnss.parse_topology_zoo(path.join(TOPOLOGY_RESOURCES_DIR,
-                                                 'Geant2012.graphml')
+                                                 "Geant2012.graphml")
                                        ).to_undirected()
     topology = list(nx.connected_component_subgraphs(topology))[0]
     deg = nx.degree(topology)
 
-    caches = [v for v in topology.nodes()] # 38 nodes
+    caches = [v for v in topology.nodes()]  # 38 nodes
+    cache_catogory = [1,4,2,1,3,3,3,1,4,3,2,1,1,2,1,4,2,3,1,3,3,2,3,4,4,2,3,1,3,1,3,1,3,1,1,3,1,1,4,1]
+    count = 0
+    for node in caches:
+        fnss.add_stack(topology, node, 'receiver', {})
+        count += 1
+
     # attach sources to topology
-    source_attachments = [v for v in topology.nodes() if deg[v] == 2] # 13 nodes
+    source_attachments = [v for v in topology.nodes() if deg[v] == 2]  # 13 nodes
     sources = []
     for v in source_attachments:
-        u = v + 1000 # node ID of source
+        u = v + 1000  # node ID of source
         topology.add_edge(v, u)
         sources.append(u)
     # randomly allocate contents to sources

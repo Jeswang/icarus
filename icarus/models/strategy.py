@@ -647,8 +647,7 @@ class CacheLessForMore(Strategy):
             if v == designated_cache:
                 self.controller.put_content(v)
         self.controller.end_session()  
-        
-        
+
 
 @register_strategy('RAND_BERNOULLI')
 class RandomBernoulli(Strategy):
@@ -738,4 +737,92 @@ class RandomChoice(Strategy):
                 self.controller.put_content(v)
         self.controller.end_session() 
 
-            
+@register_strategy('CONTENT_AWARE')
+class ContentAware(Strategy):
+    """Content Aware routing
+    """
+
+    @inheritdoc(Strategy)
+    def __init__(self, view, controller, **kwargs):
+        super(ContentAware, self).__init__(view, controller)
+
+        self.sub_request = [3, 1, 4, 4, 1, 3, 4, 4, 4, 3, 2, 1, 1, 3, 4, 2, 1, 1, 2, 1, 2, 1, 3, 4, 4, 3, 1, 3, 4, 2, 2, 3, 2, 2,
+                   3, 3, 4, 4, 3, 2]
+        self.hashMapping = [[],[],[],[],[],[]];
+
+        for i in range(0, len(self.sub_request)):
+            self.hashMapping[self.sub_request[i]].append(i);
+
+        cache_nodes = list(view.caches().keys())
+        # Allocate results of hash function to caching nodes
+        self.cache_assignment = dict((i, cache_nodes[i])
+                                      for i in range(len(cache_nodes)))
+
+    @inheritdoc(Strategy)
+    def process_event(self, time, receiver, content, log):
+        # get all required data
+        source = self.view.content_source(content)
+        cache = self.authoritative_cache(content)
+        # handle (and log if required) actual request
+        self.controller.start_session(time, receiver, content, log)
+        # Forward request to authoritative cache
+        self.controller.forward_request_path(receiver, cache)
+        if self.controller.get_content(cache):
+            # We have a cache hit here
+            self.controller.forward_content_path(cache, receiver)
+        else:
+            # Cache miss: go all the way to source
+            self.controller.forward_request_path(cache, source)
+            if not self.controller.get_content(source):
+                raise RuntimeError('The content is not found the expected source')
+            self.controller.forward_content_path(source, cache)
+            # Insert in cache
+            self.controller.put_content(cache)
+            # Forward to receiver
+            self.controller.forward_content_path(cache, receiver)
+        self.controller.end_session()
+
+    def authoritative_cache(self, content):
+        """Return the authoritative cache node for the given content
+
+        Parameters
+        ----------
+        content : any hashable type
+            The identifier of the content
+
+        Returns
+        -------
+        authoritative_cache : any hashable type
+            The node on which the authoritative cache is deployed
+        """
+        if content < 300000 * 0.6:
+            return self.cache_assignment[self.hash(content, self.view.caches())]
+        else:
+            set = int((content - 300000*0.6)/(300000*0.1))
+            cache = self.hashMapping[set+1];
+            return cache[int(self.hash(content, cache))]
+
+    def hash(self, content, caches):
+        """Return a hash code of the content for hash-routing purposes
+
+
+        Parameters
+        ----------
+        content : any hashable type
+            The identifier of the content
+
+        Returns
+        -------
+        hash : int
+            The hash code of the content
+        """
+        #TODO: This hash function needs revision because it does not return
+        # equally probably hash codes
+        n = len(caches)
+        h = content % n
+        return h if (content/n) % 2 == 0 else (n - h - 1)
+
+    def chooseTheNearestNode(content):
+        result = []
+
+        return result;

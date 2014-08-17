@@ -31,7 +31,7 @@ plt.rcParams['pdf.use14corefonts'] = True
 
 # If True text is interpreted as LaTeX, e.g. underscore are interpreted as 
 # subscript. If False, text is interpreted literally
-plt.rcParams['text.usetex'] = True
+plt.rcParams['text.usetex'] = False
 plt.rcParams['text.latex.unicode']=True
 
 # Aspect ratio of the output figures

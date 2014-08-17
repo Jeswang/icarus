@@ -5,13 +5,14 @@ from icarus.tools import TruncatedZipfDist
 
 
 __all__ = [
-        'uniform_req_gen',
-        'globetraff_req_gen'
-           ]
+    'uniform_req_gen',
+    'globetraff_req_gen',
+    'custom_req_gendef'
+]
 
 
 def uniform_req_gen(topology, n_contents, alpha, rate=12.0,
-                    n_warmup=10**5, n_measured=4*10**5, seed=None):
+                    n_warmup=10 ** 5, n_measured=4 * 10 ** 5, seed=None):
     """This function generates events on the fly, i.e. instead of creating an 
     event schedule to be kept in memory, returns an iterator that generates
     events when needed.
@@ -49,7 +50,7 @@ def uniform_req_gen(topology, n_contents, alpha, rate=12.0,
                  if topology.node[v]['stack'][0] == 'receiver']
     zipf = TruncatedZipfDist(alpha, n_contents)
     random.seed(seed)
-    
+
     req_counter = 0
     t_event = 0.0
     while req_counter < n_warmup + n_measured:
@@ -61,6 +62,7 @@ def uniform_req_gen(topology, n_contents, alpha, rate=12.0,
         yield (t_event, event)
         req_counter += 1
     raise StopIteration()
+
 
 def globetraff_req_gen(topology, content_file, request_file):
     """Parse requests from GlobeTraff workload generator
@@ -76,8 +78,9 @@ def globetraff_req_gen(topology, content_file, request_file):
     """
     raise NotImplementedError('Not yet implemented')
 
+
 def custom_req_gendef(topology, n_contents, alpha, rate=12.0,
-                    n_warmup=10**5, n_measured=4*10**5, seed=None):
+                      n_warmup=10 ** 5, n_measured=4 * 10 ** 5, seed=None):
     """This function generates events on the fly, i.e. instead of creating an 
     event schedule to be kept in memory, returns an iterator that generates
     events when needed.
@@ -112,16 +115,34 @@ def custom_req_gendef(topology, n_contents, alpha, rate=12.0,
         dictionary of event attributes.
     """
     receivers = [v for v in topology.nodes_iter()
-                 if topology.node[v]['stack'][0] == 'receiver']
-    zipf = TruncatedZipfDist(alpha, n_contents)
+                 if topology.node[v]['stack'][0] == 'cache']
+
+    sub_request = [3, 1, 4, 4, 1, 3, 4, 4, 4, 3, 2, 1, 1, 3, 4, 2, 1, 1, 2, 1, 2, 1, 3, 4, 4, 3, 1, 3, 4, 2, 2, 3, 2, 2,
+                   3, 3, 4, 4, 3, 2]
+
+    zipfs = []
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.6))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
+
     random.seed(seed)
-    
+
     req_counter = 0
     t_event = 0.0
     while req_counter < n_warmup + n_measured:
         t_event += (random.expovariate(rate))
         receiver = random.choice(receivers)
-        content = int(zipf.rv())
+        if random.random() > 0.4:
+            zipf = zipfs[0]
+            content_begin = 0
+        else:
+            category = sub_request[receiver]
+            zipf = zipfs[category]
+            content_begin = n_contents * (0.6 + (category-1)*0.1)
+
+        content = content_begin + int(zipf.rv())
         log = (req_counter >= n_warmup)
         event = {'receiver': receiver, 'content': content, 'log': log}
         yield (t_event, event)

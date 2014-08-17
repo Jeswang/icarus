@@ -44,7 +44,7 @@ N_MEASURED_REQUESTS = 2*10**5
 
 # If True, executes simulations in parallel using multiple processes
 # to take advantage of multicore CPUs
-PARALLEL_EXECUTION = True
+PARALLEL_EXECUTION = False
 
 # Number of processes used to run simulations in parallel.
 # This option is ignored if PARALLEL_EXECUTION = False
@@ -53,7 +53,7 @@ N_PROCESSES = cpu_count()
 # Topologies used for the simulation.
 # Topology implementations are located in ./icarus/scenarios/topology.py
 # TOPOLOGIES = ['GEANT', 'WIDE', 'GARR', 'TISCALI']
-TOPOLOGIES = ['GEANT']
+TOPOLOGIES = ['GEANT_CUSTOM']
 
 # Format in which results are saved.
 # Result readers and writers are located in module ./icarus/results/readwrite.py
@@ -64,6 +64,7 @@ RESULTS_FORMAT = 'PICKLE'
 # This below is the complete list of strategies currently implemented.
 # The code is located in ./icarus/models/strategy.py
 STRATEGIES = [
+     'CONTENT_AWARE',
      'LCE',             # Leave Copy Everywhere
      'NO_CACHE',        # No caching, shorest-path routing
      'HR_SYMM',         # Symmetric hash-routing
