@@ -19,10 +19,10 @@ LOG_LEVEL = 'INFO'
 # This would give problems while trying to plot the results because if for
 # example I wanted to filter experiment with alpha=0.8, experiments with
 # alpha = 0.799999999999 would not be recognized 
-ALPHA = [0.7, 0.9, 1.1]
+ALPHA = [0.7, 0.8, 0.9, 1.0, 1.1]
 
 # Total size of network cache as a fraction of content population
-NETWORK_CACHE = [0.01]
+NETWORK_CACHE = [0.006, 0.008, 0.01, 0.02]
 
 # Number of content objects
 N_CONTENTS = 3*10**5
@@ -44,7 +44,7 @@ N_MEASURED_REQUESTS = 2*10**5
 
 # If True, executes simulations in parallel using multiple processes
 # to take advantage of multicore CPUs
-PARALLEL_EXECUTION = False
+PARALLEL_EXECUTION = True
 
 # Number of processes used to run simulations in parallel.
 # This option is ignored if PARALLEL_EXECUTION = False
@@ -81,7 +81,7 @@ CACHE_POLICY = 'LRU'
 
 # Number of times each experiment is replicated
 # This is necessary for extracting confidence interval of selected metrics
-N_REPLICATIONS = 1
+N_REPLICATIONS = 5
 
 # List of metrics to be measured in the experiments
 # The implementation of data collectors are located in ./icaurs/execution/collectors.py
