@@ -230,7 +230,7 @@ def run_scenario(settings, params, curr_exp, n_exp):
         seed = settings.SEED if 'SEED' in settings else None
         # Get topology and event generator
         topology = topology_factory_register[topology_name](network_cache, n_contents, seed=seed)   
-        events = custom_req_gendef(topology, n_contents, alpha,
+        events = uniform_req_gen(topology, n_contents, alpha,
                                           rate=settings.NETWORK_REQUEST_RATE,
                                           n_warmup=settings.N_WARMUP_REQUESTS,
                                           n_measured=settings.N_MEASURED_REQUESTS,

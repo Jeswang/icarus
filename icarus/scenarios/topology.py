@@ -18,6 +18,7 @@ __all__ = [
         'topology_tiscali',
         'topology_wide',
         'topology_garr',
+        'topology_four_child_tree',
            ]
 
 
@@ -33,6 +34,58 @@ EXTERNAL_LINK_DELAY = 3 * 34
 TOPOLOGY_RESOURCES_DIR = path.abspath(path.join(path.dirname(__file__), 
                                                 path.pardir, path.pardir, 
                                                 'resources', 'topologies'))
+
+@register_topology_factory('FOUR_CHILD_TREE')
+def topology_four_child_tree(network_cache=0.05, n_contents=100000, seed=None):
+    """
+    Returns a tree topology
+    Parameters
+    ----------
+    network_cache : float
+        Size of network cache (sum of all caches) normalized by size of content
+        population
+    n_contents : int
+        Size of content population
+    seed : int, optional
+        The seed used for random number generation
+        
+    Returns
+    -------
+    topology : fnss.Topology
+        The topology object
+    """
+    h = 5       # depth of the tree
+    topology = fnss.k_ary_tree_topology(4, h)
+    topology.add_node(1365, depth=-1)
+    topology.add_path([0, 1365])
+
+    receivers = [v for v in topology.nodes_iter()
+                 if topology.node[v]['depth'] == h]
+    sources = [v for v in topology.nodes_iter()
+               if topology.node[v]['depth'] == -1]
+    caches = [v for v in topology.nodes_iter()
+              if topology.node[v]['depth'] >= 0
+              and topology.node[v]['depth'] < h]
+    # randomly allocate contents to sources
+    content_placement = uniform_content_placement(topology, range(1, n_contents+1), sources, seed=seed)
+    for v in sources:
+        fnss.add_stack(topology, v, 'source', {'contents': content_placement[v]})
+    for v in receivers:
+        fnss.add_stack(topology, v, 'receiver', {})
+    cache_placement = uniform_cache_placement(topology, network_cache*n_contents, caches)
+    for node, size in cache_placement.iteritems():
+        fnss.add_stack(topology, node, 'cache', {'size': size})
+    # set weights and delays on all links
+    fnss.set_weights_constant(topology, 1.0)
+    fnss.set_delays_constant(topology, INTERNAL_LINK_DELAY, 'ms')
+    # label links as internal or external
+    for u, v in topology.edges_iter():
+        if u in sources or v in sources:
+            topology.edge[u][v]['type'] = 'external'
+            fnss.set_delays_constant(topology, EXTERNAL_LINK_DELAY, 'ms', [(u, v)])
+        else:
+            topology.edge[u][v]['type'] = 'internal'
+    return topology
 
 
 @register_topology_factory('BINARY_TREE')

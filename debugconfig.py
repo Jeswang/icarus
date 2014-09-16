@@ -19,10 +19,10 @@ LOG_LEVEL = 'INFO'
 # This would give problems while trying to plot the results because if for
 # example I wanted to filter experiment with alpha=0.8, experiments with
 # alpha = 0.799999999999 would not be recognized 
-ALPHA = [0.7, 0.8, 0.9, 1.0, 1.1]
+ALPHA = [0.7,  0.9,  1.1]
 
 # Total size of network cache as a fraction of content population
-NETWORK_CACHE = [0.006, 0.008, 0.01, 0.02]
+NETWORK_CACHE = [0.008, 0.01]
 
 # Number of content objects
 N_CONTENTS = 3*10**5
@@ -53,7 +53,7 @@ N_PROCESSES = cpu_count()
 # Topologies used for the simulation.
 # Topology implementations are located in ./icarus/scenarios/topology.py
 # TOPOLOGIES = ['GEANT', 'WIDE', 'GARR', 'TISCALI']
-TOPOLOGIES = ['GEANT_CUSTOM']
+TOPOLOGIES = ['FOUR_CHILD_TREE']
 
 # Format in which results are saved.
 # Result readers and writers are located in module ./icarus/results/readwrite.py
@@ -64,14 +64,11 @@ RESULTS_FORMAT = 'PICKLE'
 # This below is the complete list of strategies currently implemented.
 # The code is located in ./icarus/models/strategy.py
 STRATEGIES = [
-     'CONTENT_AWARE',
      'LCE',             # Leave Copy Everywhere
      'NO_CACHE',        # No caching, shorest-path routing
      'HR_SYMM',         # Symmetric hash-routing
      'PROB_CACHE',      # ProbCache
      'LCD',             # Leave Copy Down
-     'RAND_CHOICE',     # Random choice: cache in one random cache on path
-     'RAND_BERNOULLI',  # Random Bernoulli: cache randomly in caches on path
              ]
 
 # Cache replacement policy used by the network caches.
@@ -81,7 +78,7 @@ CACHE_POLICY = 'LRU'
 
 # Number of times each experiment is replicated
 # This is necessary for extracting confidence interval of selected metrics
-N_REPLICATIONS = 5
+N_REPLICATIONS = 1
 
 # List of metrics to be measured in the experiments
 # The implementation of data collectors are located in ./icaurs/execution/collectors.py

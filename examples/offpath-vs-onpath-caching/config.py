@@ -99,7 +99,7 @@ STRATEGIES = [
 CACHE_POLICY = 'LRU'
 
 # Queue of experiments
-EXPERIMENT_QUEUE = deque()
+EXPERIMENT_QUEUE_ERROR = deque()
 default = Tree()
 default['workload'] = {'name':       'STATIONARY',
                        'n_contents': N_CONTENTS,
@@ -123,4 +123,4 @@ for alpha in ALPHA:
                 experiment['cache_placement']['network_cache'] = network_cache
                 experiment['desc'] = "Alpha: %s, strategy: %s, topology: %s, network cache: %s" \
                                      % (str(alpha), strategy, topology, str(network_cache))
-                EXPERIMENT_QUEUE.append(experiment)
+                EXPERIMENT_QUEUE_ERROR.append(experiment)

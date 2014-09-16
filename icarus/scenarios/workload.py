@@ -121,11 +121,11 @@ def custom_req_gendef(topology, n_contents, alpha, rate=12.0,
                    3, 3, 4, 4, 3, 2]
 
     zipfs = []
-    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.6))
-    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
-    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
-    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
-    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.1))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.2))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.2))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.2))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.2))
+    zipfs.append(TruncatedZipfDist(alpha, n_contents * 0.2))
 
     random.seed(seed)
 
@@ -134,17 +134,17 @@ def custom_req_gendef(topology, n_contents, alpha, rate=12.0,
     while req_counter < n_warmup + n_measured:
         t_event += (random.expovariate(rate))
         receiver = random.choice(receivers)
-        if random.random() > 0.4:
+        if random.random() > 0.8:
             zipf = zipfs[0]
             content_begin = 0
         else:
             category = sub_request[receiver]
             zipf = zipfs[category]
-            content_begin = n_contents * (0.6 + (category-1)*0.1)
+            content_begin = n_contents * (0.2 + (category-1)*0.2)
 
         content = content_begin + int(zipf.rv())
         log = (req_counter >= n_warmup)
-        event = {'receiver': receiver, 'content': content, 'log': log}
+        event = {'receiver': receiver, 'content': int(content), 'log': log}
         yield (t_event, event)
         req_counter += 1
     raise StopIteration()

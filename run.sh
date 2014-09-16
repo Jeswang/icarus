@@ -1,2 +1,2 @@
 
-python icarus.py -r results3.pickle debugconfig.py
+python icarus.py -r results4.pickle debugconfig.py
