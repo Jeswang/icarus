@@ -209,19 +209,20 @@ class HierarchicalColl(Strategy):
                 count += 1
 
             if count > self.collaborate_level:
-                    if v != receiver and v in self.cache_size:
-                        prob_cache = 0.5
-                        if random.random() < prob_cache:
-                            removed_item = self.controller.put_content(v)
-                            for i in range(1, self.collaborate_level+1):
-                                if hop-i >= 0:
-                                    alert_node = path[hop-i]
-                                    if alert_node not in self.view.caches():
-                                        continue
-                                    self.controller.add_item_to_node(alert_node, v)
-                                    if removed_item != None:
-                                        self.controller.remove_item_from_node(alert_node, removed_item)
-                            count = 0
+                if v != receiver and v in self.cache_size:
+                    depth = self.controller.get_node_level(v)
+                    prob_cache = [0.1, 0.2, 0.3, 0.4, 0.5][depth]
+                    if random.random() < prob_cache:
+                        removed_item = self.controller.put_content(v)
+                        for i in range(1, self.collaborate_level+1):
+                            if hop-i >= 0:
+                                alert_node = path[hop-i]
+                                if alert_node not in self.view.caches():
+                                    continue
+                                self.controller.add_item_to_node(alert_node, v)
+                                if removed_item != None:
+                                    self.controller.remove_item_from_node(alert_node, removed_item)
+                        count = 0
 
         self.controller.end_session()
 

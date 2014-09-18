@@ -68,7 +68,7 @@ STRATEGIES = [
      'HIER_COLLABORATE', #
      'HIER_OPTIMAL',
      'HR_SYMM',          # Symmetric hash-routing
-     #'PROB_CACHE',      # ProbCache
+     'PROB_CACHE',      # ProbCache
      'LCD',              # Leave Copy Down
              ]
 
@@ -79,7 +79,7 @@ CACHE_POLICY = 'LRU'
 
 # Number of times each experiment is replicated
 # This is necessary for extracting confidence interval of selected metrics
-N_REPLICATIONS = 1
+N_REPLICATIONS = 2
 
 # List of metrics to be measured in the experiments
 # The implementation of data collectors are located in ./icaurs/execution/collectors.py

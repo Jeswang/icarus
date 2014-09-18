@@ -357,6 +357,9 @@ class NetworkController(object):
         begin = {0: 0, 1: 1, 2: 1+4, 3: 1+4+4*4, 4: 1+4+4*4+4*4, 5:  1+4+4*4+4*4+4*4}
         return range(begin[depth]*size+1, begin[depth+1]*size+1)
 
+    def get_node_level(self, node):
+        return self.model.topology.node[node]['depth']
+
     def add_item_to_node(self, node, child_node):
         content_id = self.session['content']
         self.model.colla_table[node][content_id] = child_node
