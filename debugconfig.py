@@ -19,10 +19,10 @@ LOG_LEVEL = 'INFO'
 # This would give problems while trying to plot the results because if for
 # example I wanted to filter experiment with alpha=0.8, experiments with
 # alpha = 0.799999999999 would not be recognized 
-ALPHA = [0.7,  0.9,  1.1]
+ALPHA = [0.7, 0.8,  0.9, 1.0, 1.1]
 
 # Total size of network cache as a fraction of content population
-NETWORK_CACHE = [0.008, 0.01]
+NETWORK_CACHE = [0.008, 0.01, 0.12]
 
 # Number of content objects
 N_CONTENTS = 3*10**5
@@ -64,11 +64,12 @@ RESULTS_FORMAT = 'PICKLE'
 # This below is the complete list of strategies currently implemented.
 # The code is located in ./icarus/models/strategy.py
 STRATEGIES = [
-     'LCE',             # Leave Copy Everywhere
+     'LCE',              # Leave Copy Everywhere
      'HIER_COLLABORATE', #
-     'HR_SYMM',         # Symmetric hash-routing
+     'HIER_OPTIMAL',
+     'HR_SYMM',          # Symmetric hash-routing
      #'PROB_CACHE',      # ProbCache
-     #'LCD',             # Leave Copy Down
+     'LCD',              # Leave Copy Down
              ]
 
 # Cache replacement policy used by the network caches.

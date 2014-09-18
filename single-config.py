@@ -65,7 +65,8 @@ RESULTS_FORMAT = 'PICKLE'
 # The code is located in ./icarus/models/strategy.py
 STRATEGIES = [
      #'LCE',             # Leave Copy Everywhere
-     'HIER_COLLABORATE', #
+     #'HIER_COLLABORATE', #
+     'HIER_OPTIMAL', #
      #'HR_SYMM',         # Symmetric hash-routing
      #'PROB_CACHE',      # ProbCache
      #'LCD',             # Leave Copy Down

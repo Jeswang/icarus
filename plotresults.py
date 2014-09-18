@@ -63,8 +63,8 @@ STRATEGY_STYLE = {
          'LCD':             'g-->',
          'CL4M':            'g-->',
          'PROB_CACHE':      'c--<',
-         'RAND_CHOICE':     'r--<',
-         'HIER_COLLABORATE':  'g--*',
+         'HIER_OPTIMAL':'r--<',
+         'HIER_COLLABORATE':'g--*',
          'NO_CACHE':        'k:o',
          'OPTIMAL':         'k-o'
                 }
@@ -80,8 +80,8 @@ STRATEGY_LEGEND = {
          'HR_HYBRID_SM':    'HR Hybrid SM',
          'CL4M':            'CL4M',
          'PROB_CACHE':      'ProbCache',
-         'RAND_CHOICE':     'Random (choice)',
-         'HIER_COLLABORATE':  'HIER\_COLLABORATE',
+         'HIER_OPTIMAL':    'Hier Optimal',
+         'HIER_COLLABORATE':'HIER\_COLLABORATE',
          'NO_CACHE':        'No caching',
          'OPTIMAL':         'Optimal'
                     }

@@ -354,7 +354,7 @@ class NetworkController(object):
     def get_optimal_range(self, node):
         depth = self.model.topology.node[node]['depth']
         size = self.model.cache_size[0]
-        begin = {1: 0, 2: 1, 3: 1+4, 4: 1+4+4*4, 5: 1+4+4*4+4*4}
+        begin = {0: 0, 1: 1, 2: 1+4, 3: 1+4+4*4, 4: 1+4+4*4+4*4, 5:  1+4+4*4+4*4+4*4}
         return range(begin[depth]*size+1, begin[depth+1]*size+1)
 
     def add_item_to_node(self, node, child_node):

@@ -77,7 +77,7 @@ class Strategy(object):
 class HierarchicalOptimal(Strategy):
     @inheritdoc(Strategy)
     def __init__(self, view, controller):
-        super(HierarchicalColl, self).__init__(view, controller)
+        super(HierarchicalOptimal, self).__init__(view, controller)
         self.collaborate_level = 2
         self.cache_size = self.view.caches()
 
@@ -222,7 +222,6 @@ class HierarchicalColl(Strategy):
                                     if removed_item != None:
                                         self.controller.remove_item_from_node(alert_node, removed_item)
                             count = 0
-
 
         self.controller.end_session()
 
