@@ -177,6 +177,8 @@ class NetworkModel(object):
         # Dictionary of cache sizes keyed by node
         self.cache_size = {}
         
+        self.colla_table = {}
+
         # Dictionary of link types (internal/external)
         self.link_type = nx.get_edge_attributes(topology.to_directed(), 'type')
         
@@ -188,6 +190,7 @@ class NetworkModel(object):
             stack_name, stack_props = fnss.get_stack(topology, node)
             if stack_name == 'cache':
                 self.cache_size[node] = stack_props['size']
+                self.colla_table[node] = {}
             elif stack_name == 'source':
                 contents = stack_props['contents']
                 for content in contents:
@@ -333,8 +336,42 @@ class NetworkController(object):
             The node where the content is inserted
         """
         if node in self.model.caches:
-            self.model.caches[node].put(self.session['content'])
-    
+            return self.model.caches[node].put(self.session['content'])
+        return None
+
+    def memoize(f):
+        cache = {}
+
+        def memoizedFunction(*args):
+            if args not in cache:
+                cache[args] = f(*args)
+            return cache[args]
+
+        memoizedFunction.cache = cache
+        return memoizedFunction
+
+    @memoize
+    def get_optimal_range(self, node):
+        depth = self.model.topology.node[node]['depth']
+        size = self.model.cache_size[0]
+        begin = {1: 0, 2: 1, 3: 1+4, 4: 1+4+4*4, 5: 1+4+4*4+4*4}
+        return range(begin[depth]*size+1, begin[depth+1]*size+1)
+
+    def add_item_to_node(self, node, child_node):
+        content_id = self.session['content']
+        self.model.colla_table[node][content_id] = child_node
+
+    def remove_item_from_node(self, node, content_id):
+        if content_id in self.model.colla_table[node]:
+            del self.model.colla_table[node][content_id]
+
+    def get_child_content(self, node):
+        if node in self.model.caches:
+            cache_found = self.model.colla_table[node].get(self.session['content'])
+            if cache_found:
+                return cache_found
+        return None
+
     def get_content(self, node):
         """Get a content from a server or a cache.
 

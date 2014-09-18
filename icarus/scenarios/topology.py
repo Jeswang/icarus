@@ -35,7 +35,7 @@ TOPOLOGY_RESOURCES_DIR = path.abspath(path.join(path.dirname(__file__),
                                                 path.pardir, path.pardir, 
                                                 'resources', 'topologies'))
 
-@register_topology_factory('FOUR_CHILD_TREE')
+@register_topology_factory('FOURTREE')
 def topology_four_child_tree(network_cache=0.05, n_contents=100000, seed=None):
     """
     Returns a tree topology

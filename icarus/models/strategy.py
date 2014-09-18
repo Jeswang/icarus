@@ -23,7 +23,8 @@ __all__ = [
        'LeaveCopyDown',
        'CacheLessForMore',
        'RandomBernoulli',
-       'RandomChoice'
+       'RandomChoice',
+       'HierarchicalColl'
            ]
 
 #TODO: Implement BaseOnPath to reduce redundant code
@@ -71,6 +72,159 @@ class Strategy(object):
         """
         raise NotImplementedError('The selected strategy must implement '
                                   'a process_event method')
+
+@register_strategy('HIER_OPTIMAL')
+class HierarchicalOptimal(Strategy):
+    @inheritdoc(Strategy)
+    def __init__(self, view, controller):
+        super(HierarchicalColl, self).__init__(view, controller)
+        self.collaborate_level = 2
+        self.cache_size = self.view.caches()
+
+    def process_event(self, time, receiver, content, log):
+        # get all required data
+        source = self.view.content_source(content)
+        path = self.view.shortest_path(receiver, source)
+        # Route requests to original source and queries caches on the path
+        self.controller.start_session(time, receiver, content, log)
+        for hop in range(1, len(path)):
+            u = path[hop - 1]
+            v = path[hop]
+            self.controller.forward_request_hop(u, v)
+            if v in self.view.caches():
+                if self.controller.get_content(v):
+                    serving_node = v
+                    parent_node = v
+                    flag = True
+                    break
+            # Check all the child cache
+            child_node = self.controller.get_child_content(v)
+            if child_node:
+                self.controller.get_content(child_node)
+                parent_node = v
+                serving_node = child_node
+                flag = True
+                break
+            # No cache hits, get content from source
+            self.controller.get_content(v)
+            serving_node = v
+            flag = False
+            parent_node = None
+        # Return content
+        path = self.view.shortest_path(serving_node, receiver)
+
+        count = None
+        for hop in range(1, len(path)):
+            u = path[hop - 1]
+            v = path[hop]
+
+            self.controller.forward_content_hop(u, v)
+
+            if parent_node == None and count == None:
+                count = self.collaborate_level
+
+            if parent_node == u:
+                count = 0
+
+            if count == None:
+                continue
+            else:
+                count += 1
+
+            if count > self.collaborate_level:
+                    if v != receiver and v in self.cache_size:
+                        content_id = self.controller.session['content']
+                        if content_id in self.controller.get_optimal_range(v):
+                            removed_item = self.controller.put_content(v)
+                            for i in range(1, self.collaborate_level+1):
+                                if hop-i >= 0:
+                                    alert_node = path[hop-i]
+                                    if alert_node not in self.view.caches():
+                                        continue
+                                    self.controller.add_item_to_node(alert_node, v)
+                                    if removed_item != None:
+                                        self.controller.remove_item_from_node(alert_node, removed_item)
+                            count = 0
+
+        self.controller.end_session()
+
+
+
+@register_strategy('HIER_COLLABORATE')
+class HierarchicalColl(Strategy):
+    @inheritdoc(Strategy)
+    def __init__(self, view, controller):
+        super(HierarchicalColl, self).__init__(view, controller)
+        self.collaborate_level = 2
+        self.cache_size = self.view.caches()
+
+    def process_event(self, time, receiver, content, log):
+        # get all required data
+        source = self.view.content_source(content)
+        path = self.view.shortest_path(receiver, source)
+        # Route requests to original source and queries caches on the path
+        self.controller.start_session(time, receiver, content, log)
+        for hop in range(1, len(path)):
+            u = path[hop - 1]
+            v = path[hop]
+            self.controller.forward_request_hop(u, v)
+            if v in self.view.caches():
+                if self.controller.get_content(v):
+                    serving_node = v
+                    parent_node = v
+                    flag = True
+                    break
+            # Check all the child cache
+            child_node = self.controller.get_child_content(v)
+            if child_node:
+                self.controller.get_content(child_node)
+                parent_node = v
+                serving_node = child_node
+                flag = True
+                break
+            # No cache hits, get content from source
+            self.controller.get_content(v)
+            serving_node = v
+            flag = False
+            parent_node = None
+        # Return content
+        path = self.view.shortest_path(serving_node, receiver)
+
+        count = None
+        for hop in range(1, len(path)):
+            u = path[hop - 1]
+            v = path[hop]
+
+            self.controller.forward_content_hop(u, v)
+
+            if parent_node == None and count == None:
+                count = self.collaborate_level
+
+            if parent_node == u:
+                count = 0
+
+            if count == None:
+                continue
+            else:
+                count += 1
+
+            if count > self.collaborate_level:
+                    if v != receiver and v in self.cache_size:
+                        prob_cache = 0.5
+                        if random.random() < prob_cache:
+                            removed_item = self.controller.put_content(v)
+                            for i in range(1, self.collaborate_level+1):
+                                if hop-i >= 0:
+                                    alert_node = path[hop-i]
+                                    if alert_node not in self.view.caches():
+                                        continue
+                                    self.controller.add_item_to_node(alert_node, v)
+                                    if removed_item != None:
+                                        self.controller.remove_item_from_node(alert_node, removed_item)
+                            count = 0
+
+
+        self.controller.end_session()
 
 
 

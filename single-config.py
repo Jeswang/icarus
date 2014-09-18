@@ -44,7 +44,7 @@ N_MEASURED_REQUESTS = 2*10**5
 
 # If True, executes simulations in parallel using multiple processes
 # to take advantage of multicore CPUs
-PARALLEL_EXECUTION = True
+PARALLEL_EXECUTION = False
 
 # Number of processes used to run simulations in parallel.
 # This option is ignored if PARALLEL_EXECUTION = False
@@ -64,9 +64,9 @@ RESULTS_FORMAT = 'PICKLE'
 # This below is the complete list of strategies currently implemented.
 # The code is located in ./icarus/models/strategy.py
 STRATEGIES = [
-     'LCE',             # Leave Copy Everywhere
+     #'LCE',             # Leave Copy Everywhere
      'HIER_COLLABORATE', #
-     'HR_SYMM',         # Symmetric hash-routing
+     #'HR_SYMM',         # Symmetric hash-routing
      #'PROB_CACHE',      # ProbCache
      #'LCD',             # Leave Copy Down
              ]

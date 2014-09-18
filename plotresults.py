@@ -31,7 +31,7 @@ plt.rcParams['pdf.use14corefonts'] = True
 
 # If True text is interpreted as LaTeX, e.g. underscore are interpreted as 
 # subscript. If False, text is interpreted literally
-plt.rcParams['text.usetex'] = False
+plt.rcParams['text.usetex'] = True
 plt.rcParams['text.latex.unicode']=True
 
 # Aspect ratio of the output figures
@@ -64,7 +64,7 @@ STRATEGY_STYLE = {
          'CL4M':            'g-->',
          'PROB_CACHE':      'c--<',
          'RAND_CHOICE':     'r--<',
-         'RAND_BERNOULLI':  'g--*',
+         'HIER_COLLABORATE':  'g--*',
          'NO_CACHE':        'k:o',
          'OPTIMAL':         'k-o'
                 }
@@ -81,7 +81,7 @@ STRATEGY_LEGEND = {
          'CL4M':            'CL4M',
          'PROB_CACHE':      'ProbCache',
          'RAND_CHOICE':     'Random (choice)',
-         'RAND_BERNOULLI':  'Random (Bernoulli)',
+         'HIER_COLLABORATE':  'HIER\_COLLABORATE',
          'NO_CACHE':        'No caching',
          'OPTIMAL':         'Optimal'
                     }
