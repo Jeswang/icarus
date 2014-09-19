@@ -342,13 +342,13 @@ class NetworkController(object):
     def memoize(f):
         cache = {}
 
-        def memoizedFunction(*args):
+        def memoized_function(*args):
             if args not in cache:
                 cache[args] = f(*args)
             return cache[args]
 
-        memoizedFunction.cache = cache
-        return memoizedFunction
+        memoized_function.cache = cache
+        return memoized_function
 
     @memoize
     def get_optimal_range(self, node):

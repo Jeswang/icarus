@@ -19,7 +19,7 @@ LOG_LEVEL = 'INFO'
 # This would give problems while trying to plot the results because if for
 # example I wanted to filter experiment with alpha=0.8, experiments with
 # alpha = 0.799999999999 would not be recognized 
-ALPHA = [0.7, 0.8,  0.9, 1.0, 1.1]
+ALPHA = [0.7, 0.9, 1.1]
 
 # Total size of network cache as a fraction of content population
 NETWORK_CACHE = [0.008, 0.01, 0.12]
@@ -68,7 +68,7 @@ STRATEGIES = [
      'HIER_COLLABORATE', #
      'HIER_OPTIMAL',
      'HR_SYMM',          # Symmetric hash-routing
-     'PROB_CACHE',      # ProbCache
+     #'PROB_CACHE',      # ProbCache
      'LCD',              # Leave Copy Down
              ]
 
@@ -79,7 +79,7 @@ CACHE_POLICY = 'LRU'
 
 # Number of times each experiment is replicated
 # This is necessary for extracting confidence interval of selected metrics
-N_REPLICATIONS = 2
+N_REPLICATIONS = 1
 
 # List of metrics to be measured in the experiments
 # The implementation of data collectors are located in ./icaurs/execution/collectors.py
