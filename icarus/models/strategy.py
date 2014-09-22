@@ -149,7 +149,6 @@ class HierarchicalOptimal(Strategy):
         self.controller.end_session()
 
 
-
 @register_strategy('HIER_COLLABORATE')
 class HierarchicalColl(Strategy):
     @inheritdoc(Strategy)
